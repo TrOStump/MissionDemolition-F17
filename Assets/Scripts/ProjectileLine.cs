@@ -67,7 +67,7 @@ public class ProjectileLine : MonoBehaviour {
             //it adds an extra bit of line to aid aiming later
             points.Add(pt + launchPosDif);
             points.Add(pt);
-            line.SetVertexCount(2);
+            line.positionCount = 2;
             //sets the first 2 points
             line.SetPosition(0, points[0]);
             line.SetPosition(1, points[1]);
@@ -78,7 +78,7 @@ public class ProjectileLine : MonoBehaviour {
         {
             //normal behavior of adding a point
             points.Add(pt);
-            line.SetVertexCount(points.Count);
+            line.positionCount = points.Count;
             line.SetPosition(points.Count - 1, lastPoint);
             line.enabled = true;
         }
@@ -101,25 +101,29 @@ public class ProjectileLine : MonoBehaviour {
         if (poi == null)
         {
             //there is no poi search for one
-            if(FollowCam.S.poi != null)
+            if (FollowCam.S.poi != null)
             {
-                poi = FollowCam.S.poi;
+                if (FollowCam.S.poi.tag == "Projectile")
+                {
+                    poi = FollowCam.S.poi;
+                }
+                else
+                {
+                    return; // return if we didn't find a poi
+                }
             }
             else
             {
                 return; // return if we didn't find a poi
             }
         }
-        else
-        {
-            return; // return if we didn't find a poi
-        }
+
         AddPoint();
         if (poi.GetComponent<Rigidbody>().IsSleeping())
         {
             //once the poi is sleeping, it is cleared
             poi = null;
         }
+        
     }
-
 }
